@@ -1,4 +1,4 @@
-"""
+```
 Description:
     This program fetches information for a given IP address using the proxycheck.io service.
     It also optionally allows the user to block the ASN associated with the IP in Cloudflare.
@@ -40,3 +40,4 @@ These services are used under their respective terms of service.
 
 Third-party Libraries Used:
     - requests: Licensed under the MIT License (https://github.com/psf/requests)
+```
