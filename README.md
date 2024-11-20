@@ -4,7 +4,8 @@ Description:
     It also optionally allows the user to block the ASN associated with the IP in Cloudflare.
     The program is designed to work with an environment file ("env.gipc") from Global IPconnect's 
     Cloudflare DNS Manager to manage Cloudflare credentials. This program has a caching mechanism
-    storing previously check IP addresses to reduce usage of daily API requests.
+    storing previously check IP addresses to reduce usage of daily API requests. Source versions
+    are compatible with Windows, Linux, MacOS, BSD and SunOS/Unix (Solaris).
 
 Installation of compiled releases:
 
