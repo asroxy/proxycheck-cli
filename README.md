@@ -27,9 +27,9 @@ Requirements:
     - Python 3.x
     - requests
     - An environment file at ~/env.gipc containing:
-        CLOUDFLARE_API_KEY=<your_api_key>
-        CLOUDFLARE_EMAIL=<your_email>
-        CLOUDFLARE_ACCOUNT_ID=<your_account_id>
+        CLOUDFLARE_API_KEY=<your_api_key> (only needed for adding to WAF IP Access list)
+        CLOUDFLARE_EMAIL=<your_email> (only needed for adding to WAF IP Access list)
+        CLOUDFLARE_ACCOUNT_ID=<your_account_id> (only needed for adding to WAF IP Access list)
         PROXYCHECK_API_KEY=<proxycheck_api_key>
 
 Third-party Services:
