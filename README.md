@@ -44,7 +44,7 @@ PROXYCHECK_API_KEY=<proxycheck_api_key>
 
 —  Cloudflare API for managing firewall rules.
 
-> **These services are used under their respective terms of service.**
+**These services are used under their respective terms of service.**
 
 **Third-party Libraries Used**:
 
