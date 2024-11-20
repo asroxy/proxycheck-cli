@@ -5,15 +5,15 @@ This program fetches information for a given IP address or email using the proxy
 
 Once you have extracted the binary, browse to it's location using your preferred terminal or prompt and use the following commands to move the file allowing easy use of it.
 
--- Windows
+— Windows
 ```
 move proxycheck.exe C:\Windows\
 ```
--- Linux
+— Linux
 ```
 mv proxycheck /usr/local/bin
 ```
--- Mac
+— Mac
 ```
 xattr -dr com.apple.quarantine ./proxycheck
 mv proxycheck /usr/local/bin
@@ -26,11 +26,11 @@ Usage:
 
 **Requirements**:
 
---  Python 3.x
+—  Python 3.x
 
---  requests
+—  requests
 
---  An environment file at ~/env.gipc containing:
+—  An environment file at ~/env.gipc containing:
 ```
 CLOUDFLARE_API_KEY=<your_api_key> (only needed for adding to WAF IP Access list)
 CLOUDFLARE_EMAIL=<your_email> (only needed for adding to WAF IP Access list)
@@ -39,12 +39,13 @@ PROXYCHECK_API_KEY=<proxycheck_api_key>
 ```
 
 **Third-party Services**:
->  proxycheck.io API for retrieving IP information.
 
->  Cloudflare API for managing firewall rules.
+—  proxycheck.io API for retrieving IP information.
 
-These services are used under their respective terms of service.
+—  Cloudflare API for managing firewall rules.
+
+> **These services are used under their respective terms of service.**
 
 **Third-party Libraries Used**:
 
->  requests: Licensed under the MIT License (https://github.com/psf/requests)
+—  requests: Licensed under the MIT License (https://github.com/psf/requests)
