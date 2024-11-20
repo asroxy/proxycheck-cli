@@ -1,10 +1,4 @@
 """
-ProxyCheck Script
-
-Author: Roxana Schram (陈美, Chen Mei)
-Copyright (c) 2024 Roxana Schram (陈美)
-All rights reserved.
-
 Description:
     This program fetches information for a given IP address using the proxycheck.io service.
     It also optionally allows the user to block the ASN associated with the IP in Cloudflare.
