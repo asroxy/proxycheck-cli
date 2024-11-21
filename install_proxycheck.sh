@@ -37,7 +37,14 @@ install_proxycheck() {
     fi
 
     echo "Installing to $DEST..."
-    sudo mv /tmp/proxycheck/proxycheck "$DEST"
+
+    # Check if running as root (uid == 0)
+    if [ "$(id -u)" -ne 0 ]; then
+        echo "You need to run this script as root (sudo)."
+        exit 1
+    fi
+
+    mv /tmp/proxycheck/proxycheck "$DEST"
 
     echo "Cleaning up..."
     rm -rf /tmp/proxycheck
@@ -46,9 +53,9 @@ install_proxycheck() {
     echo "Installation complete."
 }
 
-# Check for root (for BSD, Solaris)
+# Check if script is being run as root
 if [ "$(id -u)" -ne 0 ]; then
-    echo "You need to run this script as root or with sudo for BSD/Solaris."
+    echo "You need to run this script as root or with sudo."
     exit 1
 fi
 
