@@ -43,5 +43,7 @@ PROXYCHECK_API_KEY=<proxycheck_api_key>
 
 —  requests: Licensed under the MIT License (https://github.com/psf/requests)
 
+#### Screenshots
+
 ![proxycheck-cli(solaris)](https://github.com/user-attachments/assets/54717eb4-32ae-43ea-a85c-096cb3da87c8)
 ![proxycheck-cli(windows)](https://github.com/user-attachments/assets/26fcd69e-9b45-448e-a4c2-d68b887b4a42)
