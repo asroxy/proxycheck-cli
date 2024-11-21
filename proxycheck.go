@@ -75,6 +75,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 )
@@ -91,10 +93,17 @@ type CacheEntry struct {
 	Data      map[string]interface{} `json:"data"`
 }
 
-func loadEnvVariables(filePath string) (EnvVars, error) {
-	file, err := os.Open(filePath)
+func loadEnvVariables() (EnvVars, error) {
+	var envFilePath string
+	if runtime.GOOS == "windows" {
+		envFilePath = filepath.Join(os.Getenv("HOMEPATH"), "env.gipc")
+	} else {
+		envFilePath = filepath.Join(os.Getenv("HOME"), "env.gipc")
+	}
+
+	file, err := os.Open(envFilePath)
 	if err != nil {
-		return EnvVars{}, fmt.Errorf("warning: environment file '%s' not found", filePath)
+		return EnvVars{}, fmt.Errorf("warning: environment file '%s' not found", envFilePath)
 	}
 	defer file.Close()
 
@@ -121,7 +130,7 @@ func loadEnvVariables(filePath string) (EnvVars, error) {
 }
 
 func loadCache() (map[string]CacheEntry, error) {
-	cacheFilePath := os.Getenv("HOME") + "/proxycheck_cache.json"
+	cacheFilePath := filepath.Join(os.Getenv("HOME"), "proxycheck_cache.json")
 	file, err := os.Open(cacheFilePath)
 	if err != nil {
 		return make(map[string]CacheEntry), nil // No cache file found, return an empty map
@@ -138,7 +147,7 @@ func loadCache() (map[string]CacheEntry, error) {
 }
 
 func saveCache(cache map[string]CacheEntry) error {
-	cacheFilePath := os.Getenv("HOME") + "/proxycheck_cache.json"
+	cacheFilePath := filepath.Join(os.Getenv("HOME"), "proxycheck_cache.json")
 	file, err := os.Create(cacheFilePath)
 	if err != nil {
 		return fmt.Errorf("error creating cache file: %v", err)
@@ -348,7 +357,7 @@ func main() {
 	}
 
 	option := os.Args[1]
-	envVars, err := loadEnvVariables(os.Getenv("HOME") + "/env.gipc")
+	envVars, err := loadEnvVariables()
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -395,3 +404,4 @@ func main() {
 		}
 	}
 }
+
