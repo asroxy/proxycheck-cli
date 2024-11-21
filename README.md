@@ -1,5 +1,5 @@
 #### Description:
-This program fetches information for a given IP address or email using the proxycheck.io service. It also optionally allows the user to block the ASN associated with the IP in Cloudflare. The program is designed to work with an environment file ("env.gipc") from Global IPconnect's Cloudflare DNS Manager to manage Cloudflare credentials. You do not need to have the DNS manager from them, just create the env file as shown below.
+This program fetches information for a given IP address or email using the proxycheck.io service. It also optionally allows the user to block the ASN associated with the IP in Cloudflare. The program is designed to work with an environment file ("env.gipc") from Global IPconnect's Cloudflare DNS Manager to manage Cloudflare credentials. You do not need to have the DNS manager from them, just create the env file as shown below. Windows, MacOS and Linux binaries are compiled from the Python version, while the SunOS (aka Solaris 11.4 or Unix) is compiled from the Go version.
 
 **Installation of compiled releases**:
 
@@ -25,10 +25,6 @@ Usage:
  	proxycheck -e <email_address>    --    Checks email address
 
 **Requirements**:
-
-—  Python 3.x
-
-—  requests
 
 —  An environment file at ~/env.gipc containing:
 ```
