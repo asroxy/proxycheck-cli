@@ -9,7 +9,7 @@ Once you have extracted the binary, browse to it's location using your preferred
 ```
 move proxycheck.exe C:\Windows\
 ```
-— Linux
+— Linux, SunOS (Unix), BSD
 ```
 mv proxycheck /usr/local/bin
 ```
