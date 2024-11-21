@@ -3,11 +3,9 @@ This program fetches information for a given IP address or email using the proxy
 
 **Installation of compiled releases**:
 
-Once you have extracted the binary, browse to it's location using your preferred terminal or prompt and use the following commands to move the file allowing easy use of it.
-
-— Windows
+— Windows (From Command Prompt)
 ```
-move proxycheck.exe C:\Windows\
+curl -fsSL https://github.com/asroxy/proxycheck-cli/raw/main/install_proxycheck.bat -o install_proxycheck.bat && install_proxycheck.bat
 ```
 — Linux, SunOS (Unix), BSD
 ```
