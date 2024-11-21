@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Debugging: Show current user ID and script behavior
-echo "Current user ID: $(id -u)"
-echo "Current user: $(whoami)"
-
 # Function to download and extract file based on OS type
 install_proxycheck() {
     OS=$(uname -s)
@@ -44,7 +40,7 @@ install_proxycheck() {
 
     # Check if running as root (uid == 0)
     if [ "$(id -u)" -ne 0 ]; then
-        echo "You need to run this script as root or with sudo."
+        echo "You need to run this script as root (sudo)."
         exit 1
     fi
 
@@ -57,11 +53,9 @@ install_proxycheck() {
     echo "Installation complete."
 }
 
-# Debugging output to check if root is detected
-echo "Checking if the script is running as root..."
+# Check if script is being run as root
 if [ "$(id -u)" -ne 0 ]; then
-    echo "Error: This script must be run as root or with sudo."
-    echo "Please try running the script with sudo: sudo bash install_proxycheck.sh"
+    echo "You need to run this script as root or with sudo."
     exit 1
 fi
 
