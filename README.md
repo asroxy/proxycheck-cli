@@ -9,12 +9,11 @@ curl -fsSL https://github.com/asroxy/proxycheck-cli/raw/main/install_proxycheck.
 ```
 — Linux, SunOS (Unix), BSD
 ```
-mv proxycheck /usr/local/bin
+curl -fsSL https://github.com/asroxy/proxycheck-cli/raw/main/install_proxycheck.sh | sudo bash
 ```
 — Mac
 ```
-xattr -dr com.apple.quarantine ./proxycheck
-mv proxycheck /usr/local/bin
+curl -fsSL https://github.com/yourusername/yourrepo/raw/main/install_proxycheck.sh -o install_proxycheck.sh && sudo xattr -dr com.apple.quarantine install_proxycheck.sh && sudo bash install_proxycheck.sh
 ```        
 Usage:
 
