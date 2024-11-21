@@ -4,8 +4,8 @@
 """
 ProxyCheck CLI
 
-Author: Roxana Schram (陈美, Chen Mei)
-Copyright (c) 2024 Roxana Schram (陈美)
+Author: Roxana Schram
+Copyright (c) 2024 Roxana Schram
 All rights reserved.
 
 Description:
@@ -49,10 +49,10 @@ copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
 1. Any modification of this software from the provided state must include attribution to the original author, 
-   Roxana Schram (陈美), clearly stated in the modified version.
+   Roxana Schram, clearly stated in the modified version.
 
 2. If someone modifies code from a modified version created by another person, they must also give credit to all 
-   previous authors, including the original author, Roxana Schram (陈美). This chain of attribution must remain intact 
+   previous authors, including the original author, Roxana Schram. This chain of attribution must remain intact 
    regardless of how many modifications or derivative versions are made.
 
 3. The above copyright notice and this permission notice shall be included in all copies or substantial 
