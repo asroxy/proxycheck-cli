@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Function to download and extract file based on OS type
 install_proxycheck() {
     OS=$(uname -s)
     URL=""
@@ -38,7 +37,6 @@ install_proxycheck() {
 
     echo "Installing to $DEST..."
 
-    # Check if running as root (uid == 0)
     if [ "$(id -u)" -ne 0 ]; then
         echo "You need to run this script as root (sudo)."
         exit 1
@@ -53,11 +51,9 @@ install_proxycheck() {
     echo "Installation complete."
 }
 
-# Check if script is being run as root
 if [ "$(id -u)" -ne 0 ]; then
     echo "You need to run this script as root or with sudo."
     exit 1
 fi
 
-# Call the install function
 install_proxycheck
