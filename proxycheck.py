@@ -4,8 +4,8 @@
 """
 Proxycheck-CLI
 
-Author: Roxana Schram (陈美, Chen Mei)
-Copyright (c) 2024 Roxana Schram (陈美)
+Author: Roxana Schram
+Copyright (c) 2024 Roxana Schram
 All rights reserved.
 
 Description:
@@ -48,10 +48,10 @@ copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
 1. Any modification of this software from the provided state must include attribution to the original author, 
-   Roxana Schram (陈美), clearly stated in the modified version.
+   Roxana Schram, clearly stated in the modified version.
 
 2. If someone modifies code from a modified version created by another person, they must also give credit to all 
-   previous authors, including the original author, Roxana Schram (陈美). This chain of attribution must remain intact 
+   previous authors, including the original author, Roxana Schram. This chain of attribution must remain intact 
    regardless of how many modifications or derivative versions are made.
 
 3. The above copyright notice and this permission notice shall be included in all copies or substantial 
@@ -76,7 +76,6 @@ import hashlib
 import time
 
 def load_env_variables(file_path):
-    # 加载环境变量文件。
     # Loads environment variables from a file.
     env_vars = {}
     try:
@@ -87,17 +86,14 @@ def load_env_variables(file_path):
                 key, value = line.strip().split('=')
                 env_vars[key] = value
     except FileNotFoundError:
-        # 如果找不到环境文件，发出警告
         # Warning if the environment file is not found
         print("Warning: Environment file '{}' not found. Blocking ASN will be disabled.".format(file_path))
     except Exception as e:
-        # 处理任何其他异常的错误
         # Error handling for any other exceptions
         print("Error reading environment file: {}".format(e))
     return env_vars
 
 def load_cache():
-    # 从文件加载缓存信息。
     # Loads cached information from a file.
     cache_file_path = os.path.expanduser("~/proxycheck_cache.json")
     if os.path.exists(cache_file_path):
@@ -105,37 +101,31 @@ def load_cache():
             with open(cache_file_path, 'r') as cache_file:
                 return json.load(cache_file)
         except Exception as e:
-            # 处理读取缓存文件的问题
             # Error handling for issues with reading the cache file
             print("Error reading cache file: {}".format(e))
     return {}
 
 def save_cache(cache):
-    # 保存信息到缓存文件。
     # Saves information to a cache file.
     cache_file_path = os.path.expanduser("~/proxycheck_cache.json")
     try:
         with open(cache_file_path, 'w') as cache_file:
             json.dump(cache, cache_file)
     except Exception as e:
-        # 处理写入缓存文件的问题
         # Error handling for issues with writing to the cache file
         print("Error writing to cache file: {}".format(e))
 
 def fetch_ip_info_with_operator(ip, api_key, force_update=False):
-    # 加载缓存并检查IP信息是否可用且未过期
     # Load cache and check if IP information is available and not expired
     cache = load_cache()
     current_time = time.time()
     if ip in cache and not force_update:
         cached_data = cache[ip]
-        if current_time - cached_data['timestamp'] < 7 * 24 * 60 * 60:  # 7天的秒数 - 7 days in seconds
-            # 如果缓存可用且未过期，则使用缓存数据
+        if current_time - cached_data['timestamp'] < 7 * 24 * 60 * 60:  # 7 days in seconds
             # Use cached data if available and not expired
             print("Results fetched from cache.")
             return cached_data['data'], "cache"
 
-    # 如果未缓存或已过期，从proxycheck.io获取新数据
     # If not cached or expired, fetch new data from proxycheck.io
     url = f"https://proxycheck.io/v2/{ip}"
     params = {
@@ -151,7 +141,6 @@ def fetch_ip_info_with_operator(ip, api_key, force_update=False):
         response.raise_for_status()
         ip_info = response.json()
 
-        # 确保操作员详细信息包含在缓存中
         # Ensure operator details are included in the cache
         if "operator" in ip_info.get(ip, {}):
             cache[ip] = {
@@ -159,7 +148,6 @@ def fetch_ip_info_with_operator(ip, api_key, force_update=False):
                 'data': ip_info
             }
         else:
-            # 如果操作员详细信息不存在，则将其设置为None
             # If operator details are not present, set it to None
             ip_info[ip]["operator"] = None
             cache[ip] = {
@@ -167,20 +155,17 @@ def fetch_ip_info_with_operator(ip, api_key, force_update=False):
                 'data': ip_info
             }
 
-        # 保存更新的缓存
         # Save updated cache
         save_cache(cache)
 
         print("Results fetched from Proxycheck.io.")
         return ip_info, "proxycheck"
     except requests.RequestException as e:
-        # 处理proxycheck.io请求的问题
         # Error handling for issues with the proxycheck.io request
         print("Error fetching data from Proxycheck.io: {}".format(e))
         sys.exit(1)
 
 def fetch_email_info(email, api_key):
-    # 从proxycheck.io获取电子邮件信息
     # Fetch email information from proxycheck.io
     url = f"https://proxycheck.io/v2/{email}"
     params = {
@@ -193,7 +178,6 @@ def fetch_email_info(email, api_key):
         response.raise_for_status()
         email_info = response.json()
 
-        # 如果有可用的电子邮件信息，则显示
         # Display email information if available
         if email in email_info:
             info = email_info[email]
@@ -202,24 +186,19 @@ def fetch_email_info(email, api_key):
         else:
             print(f"\nNo information found for the email: {email}\n")
     except requests.RequestException as e:
-        # 处理proxycheck.io请求的问题
         # Error handling for issues with the proxycheck.io request
         print("Error fetching data from Proxycheck.io: {}".format(e))
         sys.exit(1)
 
 def parse_ip_info(ip, ip_info, env_vars):
-    # 解析并显示为IP地址检索到的信息
     # Parse and display information retrieved for an IP address
     if ip_info and ip in ip_info:
         info = ip_info[ip]
         results = []
 
-        # 添加IP信息摘要
         # Add IP information summary
-        results.append("")  # 在结果前添加一个空行
-        results.append(f"IP Details: {ip}")
+        results.append(f"\nIP Details: {ip}")
 
-        # 提取要显示的特定字段
         # Extracting specific fields to display
         fields = {
             "ASN": "asn",
@@ -237,13 +216,11 @@ def parse_ip_info(ip, ip_info, env_vars):
             "Type": "type"
         }
 
-        # 将字段值附加到结果中
         # Append field values to the results
         for label, key in fields.items():
             value = info.get(key, 'N/A')
             results.append(f"{label}: {value}")
 
-        # 提取操作员和政策（如果有）
         # Extract operator and policies if available
         operator = info.get("operator", None)
         if operator:
@@ -254,7 +231,6 @@ def parse_ip_info(ip, ip_info, env_vars):
             results.append(f"Popularity: {operator.get('popularity', 'N/A')}")
             results.append(f"Protocols: {', '.join(operator.get('protocols', []))}")
             
-            # 提取和显示政策
             # Extract and display policies
             policies = operator.get("policies", {})
             results.append("\nPolicies:")
@@ -263,26 +239,21 @@ def parse_ip_info(ip, ip_info, env_vars):
         else:
             results.append("\nNo operator details found for this IP.")
 
-        # 添加分隔符并将结果保存到日志文件
         # Add separators and save results to a log file
         results.append("\n-" * 80)
 
-        # 将日志文件保存到用户的主目录
         # Save log file to user's home directory
         log_file_path = os.path.expanduser("~/proxycheck_results.txt")
         try:
             with open(log_file_path, 'a', encoding='utf-8') as file:
                 file.write('\n'.join(results) + '\n\n')
         except Exception as e:
-            # 处理写入日志文件的问题
             # Error handling for issues with writing to the log file
             print("Error writing to log file: {}".format(e))
 
-        # 还将输出打印到控制台
         # Also print the output to the console
         print('\n'.join(results))
 
-        # 仅当Cloudflare凭据可用时才提示用户阻止ASN
         # Only prompt the user to block ASN if Cloudflare credentials are available
         if "asn" in info and env_vars:
             block_asn = input("\nDo you want to block ASN {} in Cloudflare? (y/n, default: n): ".format(info['asn'])).strip().lower()
@@ -290,28 +261,23 @@ def parse_ip_info(ip, ip_info, env_vars):
                 asn_numeric = ''.join(filter(str.isdigit, info["asn"]))
                 block_asn_in_cloudflare(asn_numeric, env_vars)
     else:
-        # 如果无法检索到IP信息，则打印错误
         # Print error if IP information could not be retrieved
         print("Could not retrieve information for the IP address: {}".format(ip))
 
 def block_asn_in_cloudflare(asn, env_vars):
-    # 使用Cloudflare API阻止ASN
     # Block ASN in Cloudflare using the Cloudflare API
     api_key = env_vars.get("CLOUDFLARE_API_KEY")
     email = env_vars.get("CLOUDFLARE_EMAIL")
     account_id = env_vars.get("CLOUDFLARE_ACCOUNT_ID")
 
     if not api_key or not email or not account_id:
-        # 如果缺少所需的Cloudflare凭据，则出错
         # Error if required Cloudflare credentials are missing
         print("Missing Cloudflare API credentials.")
         return
 
-    # Cloudflare API端点
     # Cloudflare API endpoint
     url = "https://api.cloudflare.com/client/v4/accounts/{}/firewall/access_rules/rules".format(account_id)
 
-    # 创建请求负载
     # Create the request payload
     data = {
         "mode": "block",
@@ -322,7 +288,6 @@ def block_asn_in_cloudflare(asn, env_vars):
         "notes": "Datacenter ASN"
     }
 
-    # 设置请求头
     # Set the request headers
     headers = {
         "X-Auth-Email": email,
@@ -330,11 +295,9 @@ def block_asn_in_cloudflare(asn, env_vars):
         "Content-Type": "application/json"
     }
 
-    # 发送POST请求以阻止ASN
     # Make the POST request to block the ASN
     response = requests.post(url, json=data, headers=headers)
 
-    # 处理Cloudflare API的响应
     # Handle response from Cloudflare API
     if response.status_code == 200:
         print("Successfully blocked ASN {} in Cloudflare.".format(asn))
@@ -342,7 +305,6 @@ def block_asn_in_cloudflare(asn, env_vars):
         print("Failed to block ASN {}. Response: {}".format(asn, response.text))
 
 def main():
-    # 验证命令行参数
     # Validate command line arguments
     if len(sys.argv) < 2 or len(sys.argv) > 3:
         print("\nUsage:\n")
@@ -352,21 +314,17 @@ def main():
         sys.exit(1)
 
     option = sys.argv[1]
-    # 从用户的主目录加载环境变量
     # Load environment variables from the user's home directory
     env_vars = load_env_variables("~/env.gipc")
 
-    # 使用proxycheck.io获取IP或电子邮件信息
     # Fetch IP or email information using proxycheck.io
     api_key = env_vars.get("PROXYCHECK_API_KEY")
     if not api_key:
-        # 如果缺少proxycheck API密钥，则出错
         # Error if proxycheck API key is missing
         print("Error: PROXYCHECK_API_KEY is missing in the environment file.")
         sys.exit(1)
 
     if option == '-e':
-        # 处理电子邮件地址检查
         # Handle email address check
         if len(sys.argv) != 3:
             print("Usage: proxycheck -e <email_address>")
@@ -374,7 +332,6 @@ def main():
         email = sys.argv[2]
         fetch_email_info(email, api_key)
     else:
-        # 处理IP地址检查
         # Handle IP address check
         ip = option
         force_update = '-u' in sys.argv
