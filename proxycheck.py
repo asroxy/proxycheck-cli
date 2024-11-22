@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# ProxyCheck Script with Operator and Policy Details
+# ProxyCheck CLI
 # Author: Roxana Schram (陈美, Chen Mei)
 # Copyright (c) 2024 Roxana Schram (陈美)
 # All rights reserved.
