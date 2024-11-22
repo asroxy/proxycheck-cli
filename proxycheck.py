@@ -1,39 +1,72 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# ProxyCheck CLI
-# Author: Roxana Schram (陈美, Chen Mei)
-# Copyright (c) 2024 Roxana Schram (陈美)
-# All rights reserved.
-#
-# Description:
-# This program fetches information for a given IP address or email using the proxycheck.io service.
-# It also optionally allows the user to block the ASN associated with the IP in Cloudflare.
-# The program is designed to work with an environment file ("env.gipc") from Global IPconnect's
-# Cloudflare DNS Manager to manage Cloudflare credentials.
-#
-# Usage:
-# proxycheck <IP_address>
-# proxycheck -e <email_address>
-#
-# Requirements:
-# - Python 3.x
-# - requests
-# - An environment file at ~/env.gipc containing:
-# CLOUDFLARE_API_KEY=<your_api_key>
-# CLOUDFLARE_EMAIL=<your_email>
-# CLOUDFLARE_ACCOUNT_ID=<your_account_id>
-# PROXYCHECK_API_KEY=<proxycheck_api_key>
-#
-# Third-party Services:
-# - proxycheck.io API for retrieving IP and email information.
-# - Cloudflare API for managing firewall rules.
-#
-# Third-party Libraries Used:
-# - requests: Licensed under the MIT License (https://github.com/psf/requests)
-#
-# LICENSE
-# MIT License
+"""
+Proxycheck-CLI
+
+Author: Roxana Schram (陈美, Chen Mei)
+Copyright (c) 2024 Roxana Schram (陈美)
+All rights reserved.
+
+Description:
+    This program fetches information for a given IP address or email using the proxycheck.io service.
+    It also optionally allows the user to block the ASN associated with the IP in Cloudflare.
+    The program is designed to work with an environment file ("env.gipc") from Global IPconnect's 
+    Cloudflare DNS Manager to manage Cloudflare credentials.
+
+Usage:
+    proxycheck <IP_address>
+    proxycheck -e <email_address>
+
+Requirements:
+    - Python 3.x
+    - requests
+    - An environment file at ~/env.gipc containing:
+        CLOUDFLARE_API_KEY=<your_api_key>
+        CLOUDFLARE_EMAIL=<your_email>
+        CLOUDFLARE_ACCOUNT_ID=<your_account_id>
+        PROXYCHECK_API_KEY=<proxycheck_api_key>
+
+Third-party Services:
+    - proxycheck.io API for retrieving IP and email information.
+    - Cloudflare API for managing firewall rules.
+
+These services are used under their respective terms of service.
+
+Third-party Libraries Used:
+    - requests: Licensed under the MIT License (https://github.com/psf/requests)
+
+LICENSE
+-------
+MIT License
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+1. Any modification of this software from the provided state must include attribution to the original author, 
+   Roxana Schram (陈美), clearly stated in the modified version.
+
+2. If someone modifies code from a modified version created by another person, they must also give credit to all 
+   previous authors, including the original author, Roxana Schram (陈美). This chain of attribution must remain intact 
+   regardless of how many modifications or derivative versions are made.
+
+3. The above copyright notice and this permission notice shall be included in all copies or substantial 
+   portions of the Software, including any third-party libraries and dependencies used by this software.
+
+4. This software also uses components licensed under the MIT License, specifically `requests`. License information 
+   for these libraries is available at the locations mentioned in the "Third-party Libraries Used" section of this file. 
+   You must include these licenses with any distribution of this software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT 
+LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN 
+NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"""
 
 import sys
 import requests
@@ -96,7 +129,7 @@ def fetch_ip_info_with_operator(ip, api_key, force_update=False):
     current_time = time.time()
     if ip in cache and not force_update:
         cached_data = cache[ip]
-        if current_time - cached_data['timestamp'] < 7 * 24 * 60 * 60:  # 7天的秒数
+        if current_time - cached_data['timestamp'] < 7 * 24 * 60 * 60:  # 7天的秒数 - 7 days in seconds
             # 如果缓存可用且未过期，则使用缓存数据
             # Use cached data if available and not expired
             print("Results fetched from cache.")
@@ -232,8 +265,7 @@ def parse_ip_info(ip, ip_info, env_vars):
 
         # 添加分隔符并将结果保存到日志文件
         # Add separators and save results to a log file
-        results.append(" " * 80)  # 添加一行空格
-        results.append("-" * 80)  # 分隔线
+        results.append("\n-" * 80)
 
         # 将日志文件保存到用户的主目录
         # Save log file to user's home directory
@@ -285,7 +317,7 @@ def block_asn_in_cloudflare(asn, env_vars):
         "mode": "block",
         "configuration": {
             "target": "asn",
-            "value": asn  # 仅限数字部分
+            "value": asn
         },
         "notes": "Datacenter ASN"
     }
