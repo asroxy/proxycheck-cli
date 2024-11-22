@@ -81,8 +81,7 @@ import (
 	"time"
 )
 
-// Environment variables structure to hold API keys and account details
-// 环境变量结构体，用于存储 API 密钥和账户详情
+# Environment variables structure to hold API keys and account details
 type EnvVars struct {
 	CloudflareAPIKey   string
 	CloudflareEmail    string
@@ -90,15 +89,13 @@ type EnvVars struct {
 	ProxycheckAPIKey   string
 }
 
-// Cache entry structure to hold cached IP or email information
-// 缓存项结构体，用于存储缓存的 IP 或邮件信息
+# Cache entry structure to hold cached IP or email information
 type CacheEntry struct {
 	Timestamp int64                  `json:"timestamp"`
 	Data      map[string]interface{} `json:"data"`
 }
 
-// Load environment variables from a file based on the OS platform
-// 从文件中加载环境变量，根据操作系统平台选择文件路径
+# Load environment variables from a file based on the OS platform
 func loadEnvVariables() (EnvVars, error) {
 	var envFilePath string
 	if runtime.GOOS == "windows" {
@@ -113,8 +110,7 @@ func loadEnvVariables() (EnvVars, error) {
 	}
 	defer file.Close()
 
-	// Read the environment file line by line and extract variables
-	// 线过线读取环境文件，并提取变量
+	# Read the environment file line by line and extract variables
 	scanner := bufio.NewScanner(file)
 	vars := make(map[string]string)
 	for scanner.Scan() {
@@ -129,8 +125,7 @@ func loadEnvVariables() (EnvVars, error) {
 		return EnvVars{}, fmt.Errorf("error reading environment file: %v", err)
 	}
 
-	// Return the environment variables extracted from the file
-	// 返回从文件中提取的环境变量
+	# Return the environment variables extracted from the file
 	return EnvVars{
 		CloudflareAPIKey:   vars["CLOUDFLARE_API_KEY"],
 		CloudflareEmail:    vars["CLOUDFLARE_EMAIL"],
@@ -139,13 +134,12 @@ func loadEnvVariables() (EnvVars, error) {
 	}, nil
 }
 
-// Load cached data from file if available
-// 如果可用，从文件中加载缓存数据
+# Load cached data from file if available
 func loadCache() (map[string]CacheEntry, error) {
 	cacheFilePath := filepath.Join(os.Getenv("HOME"), "proxycheck_cache.json")
 	file, err := os.Open(cacheFilePath)
 	if err != nil {
-		return make(map[string]CacheEntry), nil // No cache file found, return an empty map
+		return make(map[string]CacheEntry), nil # No cache file found, return an empty map
 	}
 	defer file.Close()
 
@@ -155,13 +149,11 @@ func loadCache() (map[string]CacheEntry, error) {
 		return nil, fmt.Errorf("error reading cache file: %v", err)
 	}
 
-	// Return the cache data
-	// 返回缓存数据
+	# Return the cache data
 	return cache, nil
 }
 
-// Save cache data to file
-// 将缓存数据保存到文件
+# Save cache data to file
 func saveCache(cache map[string]CacheEntry) error {
 	cacheFilePath := filepath.Join(os.Getenv("HOME"), "proxycheck_cache.json")
 	file, err := os.Create(cacheFilePath)
@@ -175,13 +167,11 @@ func saveCache(cache map[string]CacheEntry) error {
 		return fmt.Errorf("error writing to cache file: %v", err)
 	}
 
-	// Successfully saved cache
-	// 成功保存缓存
+	# Successfully saved cache
 	return nil
 }
 
-// Fetch IP information using Proxycheck.io and update cache if necessary
-// 使用 Proxycheck.io 获取 IP 信息，并在必要时更新缓存
+# Fetch IP information using Proxycheck.io and update cache if necessary
 func fetchIPInfo(ip, apiKey string, forceUpdate bool) (map[string]interface{}, string, error) {
 	cache, err := loadCache()
 	if err != nil {
@@ -190,13 +180,12 @@ func fetchIPInfo(ip, apiKey string, forceUpdate bool) (map[string]interface{}, s
 
 	currentTime := time.Now().Unix()
 	if entry, found := cache[ip]; found && !forceUpdate {
-		if currentTime-entry.Timestamp < 7*24*60*60 { // 7 days in seconds
+		if currentTime-entry.Timestamp < 7*24*60*60 { # 7 days in seconds
 			return entry.Data, "cache", nil
 		}
 	}
 
-	// Request IP information from Proxycheck.io
-	// 从 Proxycheck.io 请求 IP 信息
+	# Request IP information from Proxycheck.io
 	url := fmt.Sprintf("https://proxycheck.io/v2/%s?key=%s&tag=ProxyCheck_CLI&vpn=1&asn=1&node=1&risk=1&port=1", ip, apiKey)
 	resp, err := http.Get(url)
 	if err != nil {
@@ -214,8 +203,7 @@ func fetchIPInfo(ip, apiKey string, forceUpdate bool) (map[string]interface{}, s
 		return nil, "", fmt.Errorf("error decoding response: %v", err)
 	}
 
-	// Update cache with new data
-	// 使用新数据更新缓存
+	# Update cache with new data
 	if cache == nil {
 		cache = make(map[string]CacheEntry)
 	}
@@ -228,8 +216,7 @@ func fetchIPInfo(ip, apiKey string, forceUpdate bool) (map[string]interface{}, s
 	return ipInfo, "proxycheck", nil
 }
 
-// Fetch email information using Proxycheck.io
-// 使用 Proxycheck.io 获取邮件信息
+# Fetch email information using Proxycheck.io
 func fetchEmailInfo(email, apiKey string) (map[string]interface{}, string, error) {
 	url := fmt.Sprintf("https://proxycheck.io/v2/%s?key=%s&tag=ProxyCheck_CLI&email=1", email, apiKey)
 	resp, err := http.Get(url)
@@ -248,13 +235,11 @@ func fetchEmailInfo(email, apiKey string) (map[string]interface{}, string, error
 		return nil, "", fmt.Errorf("error decoding response: %v", err)
 	}
 
-	// Return email information
-	// 返回邮件信息
+	# Return email information
 	return emailInfo, "proxycheck", nil
 }
 
-// Parse and display IP information to the user
-// 解析并向用户显示 IP 信息
+# Parse and display IP information to the user
 func parseIPInfo(ip string, ipInfo map[string]interface{}) {
 	fmt.Printf("\nIP Details: %s\n", ip)
 
@@ -273,8 +258,7 @@ func parseIPInfo(ip string, ipInfo map[string]interface{}) {
 		"Type":          "type",
 	}
 
-	// Iterate over fields and display each one if available
-	// 迭代某些字段，如果可用，则显示
+	# Iterate over fields and display each one if available
 	for label, key := range fields {
 		value, ok := ipInfo[ip].(map[string]interface{})[key]
 		if !ok {
@@ -283,8 +267,7 @@ func parseIPInfo(ip string, ipInfo map[string]interface{}) {
 		fmt.Printf("%s: %v\n", label, value)
 	}
 
-	// Extract operator and policies if available
-	// 如果可用，提取运营商和政策信息
+	# Extract operator and policies if available
 	operator, operatorExists := ipInfo[ip].(map[string]interface{})["operator"].(map[string]interface{})
 	if operatorExists {
 		fmt.Println("\nOperator Details:")
@@ -308,8 +291,7 @@ func parseIPInfo(ip string, ipInfo map[string]interface{}) {
 	}
 }
 
-// Parse and display email information to the user
-// 解析并向用户显示邮件信息
+# Parse and display email information to the user
 func parseEmailInfo(email string, emailInfo map[string]interface{}) {
 	fmt.Printf("\nEmail Details: %s\n", email)
 
@@ -318,8 +300,7 @@ func parseEmailInfo(email string, emailInfo map[string]interface{}) {
 		"Risk Score": "risk_score",
 	}
 
-	// Iterate over fields and display each one if available
-	// 迭代某些字段，如果可用，则显示
+	# Iterate over fields and display each one if available
 	for label, key := range fields {
 		value, ok := emailInfo[email].(map[string]interface{})[key]
 		if !ok {
@@ -329,8 +310,7 @@ func parseEmailInfo(email string, emailInfo map[string]interface{}) {
 	}
 }
 
-// Block ASN in Cloudflare using provided credentials
-// 使用提供的 Cloudflare 凭据阻止 ASN
+# Block ASN in Cloudflare using provided credentials
 func blockASNInCloudflare(asn string, envVars EnvVars) {
 	apiKey := envVars.CloudflareAPIKey
 	email := envVars.CloudflareEmail
@@ -341,8 +321,7 @@ func blockASNInCloudflare(asn string, envVars EnvVars) {
 		return
 	}
 
-	// Create request to block ASN in Cloudflare
-	// 创建请求以在 Cloudflare 中阻止 ASN
+	# Create request to block ASN in Cloudflare
 	url := fmt.Sprintf("https://api.cloudflare.com/client/v4/accounts/%s/firewall/access_rules/rules", accountID)
 	data := map[string]interface{}{
 		"mode":          "block",
@@ -382,8 +361,7 @@ func blockASNInCloudflare(asn string, envVars EnvVars) {
 	}
 }
 
-// Convert a slice of interfaces to a slice of strings
-// 将接口切片转换为字符串切片
+# Convert a slice of interfaces to a slice of strings
 func interfaceSliceToStringSlice(slice []interface{}) []string {
 	stringSlice := make([]string, len(slice))
 	for i, v := range slice {
@@ -392,8 +370,7 @@ func interfaceSliceToStringSlice(slice []interface{}) []string {
 	return stringSlice
 }
 
-// Main function to run the proxycheck command-line tool
-// 主函数，运行 proxycheck 命令行工具
+# Main function to run the proxycheck command-line tool
 func main() {
 	if len(os.Args) < 2 {
 		fmt.Println("Usage: proxycheck <IP_address> or proxycheck -e <email_address>")
@@ -436,8 +413,7 @@ func main() {
 		fmt.Printf("Results fetched from %s.\n", source)
 		parseIPInfo(ip, ipInfo)
 
-		// Only prompt the user to block ASN if Cloudflare credentials are available
-		// 仅当 Cloudflare 凭据可用时提示用户阻止 ASN
+		# Only prompt the user to block ASN if Cloudflare credentials are available
 		asn, asnExists := ipInfo[ip].(map[string]interface{})["asn"].(string)
 		if asnExists && envVars.CloudflareAPIKey != "" {
 			var response string
