@@ -1,5 +1,5 @@
 #### Description:
-This program fetches information for a given IP address or email using the proxycheck.io service. It also optionally allows the user to block the ASN associated with the IP in Cloudflare. The program is designed to work with an environment file ("env.gipc") from Global IPconnect's Cloudflare DNS Manager to manage Cloudflare credentials.
+This program is ideal for servers, headless systems or just those that prefer to work at a command line interface (CLI). It fetches information for a given IP address or email using the proxycheck.io service. It also optionally allows the user to block the ASN associated with the IP in Cloudflare. The program is designed to work with an environment file ("env.gipc") from Global IPconnect's Cloudflare DNS Manager to manage Cloudflare credentials.
 
 #### Notes:
 You do not need to have the DNS manager from them, just create the env file as shown below. Windows, MacOS, BSD and Linux binaries are compiled from the Python version, while the SunOS (aka Solaris 11.4 or Unix) is compiled from the Go version. Go version should be able to be compiled in all OS. Don't repeat me on that. All OS will run from Python source even SunOS.
